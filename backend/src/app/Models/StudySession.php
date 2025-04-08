@@ -16,4 +16,8 @@ class StudySession extends Model
         'start_time',
         'finish_time',
     ];
+
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
 }

@@ -22,13 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // 学習セッション関連
-    Route::apiResource('study-sessions', StudySessionController::class);
-    Route::post('study-sessions/{id}/start', [StudySessionController::class, 'start']);
-    Route::post('study-sessions/{id}/end', [StudySessionController::class, 'end']);
+Route::apiResource('study-sessions', StudySessionController::class);
+Route::post('study-sessions/{id}/finish', [StudySessionController::class, 'finish']);
 
-    // 休憩関連
-    Route::post('breaks/start', [RestController::class, 'start']);
-    Route::post('breaks/end', [RestController::class, 'end']);
+// 休憩関連
+Route::post('rests/start', [RestController::class, 'start']);
+Route::post('rests/finish', [RestController::class, 'finish']);
 
-    // カテゴリー一覧取得
-    Route::get('categories', [CategoryController::class, 'index']);
+// カテゴリー一覧取得
+Route::get('categories', [CategoryController::class, 'index']);

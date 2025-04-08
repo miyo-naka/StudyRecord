@@ -7,31 +7,88 @@ use Illuminate\Http\Request;
 
 class StudySessionController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     * 学習記録一覧取得
+     */
     public function index()
     {
-        $items = StudySession::all();
+        $sessions = StudySession::all();
 
         return response()->json([
-            'data' => $items,
+            'data' => $sessions,
         ], 200);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     * 学習開始
+     */
     public function store(Request $request)
     {
         $study_session = StudySession::create([
-            'user_id' => auth()->id(),
+            'user_id' => $request->user_id,
             'category_id' => $request->category_id,
-            'title' => $request->title,
+            'content' => $request->content,
             'start_time' => now(),
         ]);
 
-        response()->json($study_session, 201);
+        return response()->json($study_session, 201);
     }
 
-    public function end($id)
+    /**
+     * Display the specified resource.
+     */
+    public function show(StudySession $studySession)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, StudySession $studySession)
+    {
+        $update = [
+            'category_id' => $request->category_id,
+            'content' => $request->content,
+            'start_time' => $request->start_time,
+            'finish_time' => $request->finish_time,
+        ];
+        $session = StudySession::where('id', $studySession->id)->update($update);
+        if ($session) {
+            return response()->json([
+                'message' => 'Updated successfully',
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Not found',
+            ], 404);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(StudySession $studySession)
+    {
+        $session = StudySession::where('id', $studySession->id)->delete();
+        if ($session) {
+            return response()->json([
+                'message' => 'Deleted successfully',
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Not found',
+            ], 404);
+        }
+    }
+
+    // 学習終了
+    public function finish($id)
     {
         $session = StudySession::findOrFail($id);
-        $session->end_time = now();
+        $session->finish_time = now();
         $session->save();
 
         return response()->json(['message' => '学習終了しました']);

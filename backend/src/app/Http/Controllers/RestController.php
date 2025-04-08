@@ -17,15 +17,15 @@ class RestController extends Controller
         return $rest;
     }
 
-    public function end(Request $request)
+    public function finish(Request $request)
     {
         $rest = Rest::where('study_session_id', $request->input('study_session_id'))
-            ->whereNull('rest_end_time')
+            ->whereNull('rest_finish_time')
             ->latest()
             ->first();
 
         if ($rest) {
-            $rest->rest_end_time = now();
+            $rest->rest_finish_time = now();
             $rest->save();
         }
 

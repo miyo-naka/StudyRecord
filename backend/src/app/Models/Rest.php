@@ -14,4 +14,8 @@ class Rest extends Model
         'rest_start_time',
         'rest_finish_time',
     ];
+
+    public function study_session(){
+        return $this->belongsTo(StudySession::class);
+    }
 }
