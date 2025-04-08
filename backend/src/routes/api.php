@@ -27,7 +27,7 @@ Route::post('study-sessions/{id}/finish', [StudySessionController::class, 'finis
 
 // 休憩関連
 Route::post('rests/start', [RestController::class, 'start']);
-Route::post('rests/end', [RestController::class, 'finish']);
+Route::post('rests/finish', [RestController::class, 'finish']);
 
 // カテゴリー一覧取得
 Route::get('categories', [CategoryController::class, 'index']);
