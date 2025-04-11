@@ -6,18 +6,34 @@ import { fetchStudySessions } from "@/services/studySession/fetchStudySession";
 
 export default function history() {
   const [sessions, setSessions] = useState([]);
+  console.log(sessions);
 
   useEffect(() => {
     const fetchSessions = async () => {
       try {
         const data = await fetchStudySessions();
-        console.log("取得データ:", data);
-        setSessions(data);
+        const processedData = data.map((session: any) => {
+          const date = new Date(session.start_time).toISOString().split("T")[0];
+          const rawDuration =
+            (new Date(session.finish_time).getTime() -
+              new Date(session.start_time).getTime()) /
+            1000 /
+            60 /
+            60;
+          const duration = session.finish_time
+            ? Math.floor(rawDuration * 10) / 10
+            : null;
+          return {
+            ...session,
+            date: date,
+            duration: duration,
+          };
+        });
+        setSessions(processedData);
       } catch (error) {
         console.error("取得エラー:", error);
       }
     };
-
     fetchSessions();
   }, []);
 
@@ -53,8 +69,8 @@ export default function history() {
                   key={session.id}
                   className="[&>td]:py-3 [&>td]:px-4 hover:bg-gray-50 transition-colors"
                 >
-                  <td>{session.start_time}</td>
-                  <td>{session.finish_time}</td>
+                  <td>{session.date}</td>
+                  <td>{session.duration}</td>
                   <td>{session.category.category_name}</td>
                   <td>{session.content}</td>
                   <td>
