@@ -13,7 +13,7 @@ class StudySessionController extends Controller
      */
     public function index()
     {
-        $sessions = StudySession::all();
+        $sessions = StudySession::with('category')->get();
 
         return response()->json([
             'data' => $sessions,
