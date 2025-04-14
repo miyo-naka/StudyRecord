@@ -1,7 +1,15 @@
-import { ContentsCard } from "@/components/ContentsCard";
+"use client";
+
+import ContentsCard from "@/components/ContentsCard";
 import Header from "@/components/Header";
+import StartLearningModal from "@/components/StartLearningModal";
+import { useState } from "react";
 
 export default function record() {
+  type Status = "idle" | "learning" | "break";
+  const [status, setStatus] = useState<Status>("idle");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col font-sans">
       <Header />
@@ -20,30 +28,39 @@ export default function record() {
           <ContentsCard
             title="Start Learning"
             description="学習を開始します"
-            href="/"
             emoji="⏱️"
             color="bg-peach-50"
+            disabled={status !== "idle"}
+            onClick={() => setIsModalOpen(true)}
+          />
+          <StartLearningModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            setStatus={setStatus}
           />
           <ContentsCard
             title="Finish Learning"
             description="学習を終了します"
-            href="/"
             emoji="🏅"
             color="bg-peach-50"
+            disabled={status !== "learning"}
+            onClick={() => setStatus("idle")}
           />
           <ContentsCard
             title="Have a break"
             description="休憩を開始します"
-            href="/history"
             emoji="🍵"
             color="bg-green-50"
+            disabled={status !== "learning"}
+            onClick={() => setStatus("break")}
           />
           <ContentsCard
             title="Start Again"
             description="学習を再開します"
-            href="/mypage"
             emoji="🔥"
             color="bg-green-50"
+            disabled={status !== "break"}
+            onClick={() => setStatus("learning")}
           />
         </section>
       </main>
