@@ -2,11 +2,11 @@
 
 import Header from "@/components/Header";
 import { useEffect, useState } from "react";
-import { fetchStudySessions } from "@/services/studySession/fetchStudySession";
+import fetchStudySessions from "@/services/studySession/fetchStudySession";
 
 export default function history() {
   const [sessions, setSessions] = useState([]);
-  console.log(sessions);
+  // console.log(sessions);
 
   useEffect(() => {
     const fetchSessions = async () => {

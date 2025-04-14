@@ -3,6 +3,8 @@
 import ContentsCard from "@/components/ContentsCard";
 import Header from "@/components/Header";
 import StartLearningModal from "@/components/StartLearningModal";
+import finishRest from "@/services/rest/finishRest";
+import startRest from "@/services/rest/startRest";
 import finishStudySession from "@/services/studySession/finishStudySession";
 import { useState } from "react";
 
@@ -26,6 +28,30 @@ export default function record() {
         setStatus("idle");
       } catch (error) {
         console.error("学習終了エラー:", error);
+      }
+    }
+  };
+
+  //休憩開始
+  const handleStartRest = async () => {
+    if (currentSessionId) {
+      try {
+        await startRest(currentSessionId);
+        setStatus("break");
+      } catch (error) {
+        console.error("休憩開始エラー:", error);
+      }
+    }
+  };
+
+  //休憩終了
+  const handleFinishRest = async () => {
+    if (currentSessionId) {
+      try {
+        await finishRest(currentSessionId);
+        setStatus("learning");
+      } catch (error) {
+        console.error("休憩開始エラー:", error);
       }
     }
   };
@@ -72,7 +98,7 @@ export default function record() {
             emoji="🍵"
             color="bg-green-50"
             disabled={status !== "learning"}
-            onClick={() => setStatus("break")}
+            onClick={handleStartRest}
           />
           <ContentsCard
             title="Start Again"
@@ -80,7 +106,7 @@ export default function record() {
             emoji="🔥"
             color="bg-green-50"
             disabled={status !== "break"}
-            onClick={() => setStatus("learning")}
+            onClick={handleFinishRest}
           />
         </section>
       </main>
