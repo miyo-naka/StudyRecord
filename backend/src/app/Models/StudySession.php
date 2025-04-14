@@ -17,6 +17,11 @@ class StudySession extends Model
         'finish_time',
     ];
 
+    protected $casts = [
+        'start_time' => 'datetime:Y-m-d\TH:i:sP',
+        'finish_time' => 'datetime:Y-m-d\TH:i:sP',
+    ];
+
     public function category(){
         return $this->belongsTo(Category::class);
     }
