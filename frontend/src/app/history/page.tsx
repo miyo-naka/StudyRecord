@@ -139,8 +139,6 @@ export default function history() {
           </button>
         </div>
       </main>
-
-      {/* <Footer /> */}
     </div>
   );
 }

@@ -13,7 +13,7 @@ class StudySessionController extends Controller
      */
     public function index()
     {
-        $sessions = StudySession::with(['category', 'rests'])->paginate(10);
+        $sessions = StudySession::with(['user','category', 'rests'])->paginate(10);
 
         return response()->json([
             'data' => $sessions,

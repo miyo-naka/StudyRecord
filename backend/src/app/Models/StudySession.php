@@ -26,6 +26,10 @@ class StudySession extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
     public function rests(){
         return $this->hasMany(Rest::class);
     }
