@@ -110,8 +110,6 @@ export default function record() {
           />
         </section>
       </main>
-
-      {/* <Footer /> */}
     </div>
   );
 }
