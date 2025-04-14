@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { createStudySessions } from "@/services/studySession/createStudySession";
+import createStudySession from "@/services/studySession/createStudySession";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  setStatus: (status: "idle" | "learning" | "break") => void;
+  onSessionCreated: (sessionId: number) => void;
 };
 
 export default function StartLearningModal({
   isOpen,
   onClose,
-  setStatus,
+  onSessionCreated,
 }: Props) {
   const [categoryId, setCategoryId] = useState<number>(1);
   const [content, setContent] = useState("");
@@ -23,16 +23,17 @@ export default function StartLearningModal({
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      await createStudySessions({
+      const newSession = await createStudySession({
         user_id: 1, // ← 認証未実装のため仮のuser_id
         category_id: categoryId,
         content: content,
       });
+      console.log(newSession); // ← デバッグ用
       setContent("");
-      setStatus("learning");
+      onSessionCreated(newSession.id);
       onClose();
-    } catch (err) {
-      console.error("登録失敗:", err);
+    } catch (error) {
+      console.error("登録失敗:", error);
       alert("登録に失敗しました");
     } finally {
       setLoading(false);

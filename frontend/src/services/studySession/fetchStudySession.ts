@@ -1,4 +1,4 @@
-export const fetchStudySessions = async () => {
+export default async function fetchStudySessions() {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/study-sessions`,
     {
@@ -15,4 +15,4 @@ export const fetchStudySessions = async () => {
 
   const jsondata = await res.json();
   return jsondata.data;
-};
+}

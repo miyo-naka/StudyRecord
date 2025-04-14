@@ -4,7 +4,18 @@ export type CreateStudySessionInput = {
   content: string;
 };
 
-export const createStudySessions = async (input: CreateStudySessionInput) => {
+export type StudySession = {
+  id: number;
+  start_time: string;
+  finish_time: string | null;
+  category_id: number;
+  content: string;
+  user_id: number;
+};
+
+export default async function createStudySession(
+  input: CreateStudySessionInput
+): Promise<StudySession> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/study-sessions`,
     {
@@ -20,6 +31,6 @@ export const createStudySessions = async (input: CreateStudySessionInput) => {
     throw new Error("failed to record session");
   }
 
-  const jsondata = await res.json();
-  return jsondata.data;
-};
+  const data = await res.json();
+  return data;
+}

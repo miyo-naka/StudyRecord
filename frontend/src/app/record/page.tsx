@@ -3,12 +3,32 @@
 import ContentsCard from "@/components/ContentsCard";
 import Header from "@/components/Header";
 import StartLearningModal from "@/components/StartLearningModal";
+import finishStudySession from "@/services/studySession/finishStudySession";
 import { useState } from "react";
 
 export default function record() {
   type Status = "idle" | "learning" | "break";
   const [status, setStatus] = useState<Status>("idle");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentSessionId, setCurrentSessionId] = useState<number | null>(null);
+
+  // 学習開始(モーダル内で作成後)
+  const handleSessionCreated = (id: number) => {
+    setCurrentSessionId(id);
+    setStatus("learning");
+  };
+
+  // 学習終了
+  const handleFinishStudy = async () => {
+    if (currentSessionId) {
+      try {
+        await finishStudySession(currentSessionId);
+        setStatus("idle");
+      } catch (error) {
+        console.error("学習終了エラー:", error);
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col font-sans">
@@ -36,7 +56,7 @@ export default function record() {
           <StartLearningModal
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
-            setStatus={setStatus}
+            onSessionCreated={handleSessionCreated}
           />
           <ContentsCard
             title="Finish Learning"
@@ -44,7 +64,7 @@ export default function record() {
             emoji="🏅"
             color="bg-peach-50"
             disabled={status !== "learning"}
-            onClick={() => setStatus("idle")}
+            onClick={handleFinishStudy}
           />
           <ContentsCard
             title="Have a break"

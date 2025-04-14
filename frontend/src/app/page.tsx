@@ -1,4 +1,4 @@
-import { ContentsCard } from "@/components/ContentsCard";
+import ContentsCard from "@/components/ContentsCard";
 import Header from "@/components/Header";
 
 export default function Home() {
