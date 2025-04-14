@@ -1,6 +1,6 @@
-export default async function fetchStudySessions() {
+export default async function fetchStudySessions(page: number) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/study-sessions`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/study-sessions?page=${page}`,
     {
       method: "GET",
       headers: {
@@ -10,7 +10,7 @@ export default async function fetchStudySessions() {
   );
 
   if (!res.ok) {
-    throw new Error("学習セッションの取得に失敗しました");
+    throw new Error("failed to get study-sessions");
   }
 
   const jsondata = await res.json();

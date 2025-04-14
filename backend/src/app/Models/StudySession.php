@@ -25,4 +25,8 @@ class StudySession extends Model
     public function category(){
         return $this->belongsTo(Category::class);
     }
+
+    public function rests(){
+        return $this->hasMany(Rest::class);
+    }
 }

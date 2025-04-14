@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import createStudySession from "@/services/studySession/createStudySession";
+import fetchCategories from "@/services/category/fetchCategories";
 
 type Props = {
   isOpen: boolean;
@@ -17,6 +18,17 @@ export default function StartLearningModal({
   const [categoryId, setCategoryId] = useState<number>(1);
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState<
+    { id: number; category_name: string }[]
+  >([]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      const data = await fetchCategories();
+      setCategories(data);
+    };
+    loadCategories();
+  }, []);
 
   if (!isOpen) return null;
 
@@ -52,10 +64,11 @@ export default function StartLearningModal({
             onChange={(e) => setCategoryId(Number(e.target.value))}
             className="mt-1 p-2 border rounded w-full"
           >
-            <option value={1}>Programing</option>
-            <option value={2}>English</option>
-            <option value={3}>Other</option>
-            {/* 後でAPIから取得に変更可 */}
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.category_name}
+              </option>
+            ))}
           </select>
         </div>
 
