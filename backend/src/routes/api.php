@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // 学習セッション関連
 Route::apiResource('study-sessions', StudySessionController::class);
 Route::post('study-sessions/{id}/finish', [StudySessionController::class, 'finish']);
+Route::get('study-sessions/status/{userId}', [StudySessionController::class, 'status']);
 
 // 休憩関連
 Route::post('rests/start', [RestController::class, 'start']);
