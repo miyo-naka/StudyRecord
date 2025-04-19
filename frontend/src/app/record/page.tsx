@@ -6,13 +6,33 @@ import StartLearningModal from "@/components/StartLearningModal";
 import finishRest from "@/services/rest/finishRest";
 import startRest from "@/services/rest/startRest";
 import finishStudySession from "@/services/studySession/finishStudySession";
-import { useState } from "react";
+import statusStudySession from "@/services/studySession/statusStudySession";
+import { useEffect, useState } from "react";
 
 export default function record() {
   type Status = "idle" | "learning" | "break";
   const [status, setStatus] = useState<Status>("idle");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState<number | null>(null);
+
+  //学習ステータス取得
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const userId = 1; // ← 認証未実装のため仮のuser_id
+        const data = await statusStudySession(userId);
+        console.log(data);
+        setStatus(data.status);
+        if (data.session_id) {
+          setCurrentSessionId(data.session_id);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchStatus();
+  }, []);
 
   // 学習開始(モーダル内で作成後)
   const handleSessionCreated = (id: number) => {
