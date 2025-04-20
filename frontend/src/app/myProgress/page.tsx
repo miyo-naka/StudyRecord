@@ -6,6 +6,11 @@ import fetchMypage from "@/services/mypage/fetchMypage";
 import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
+type Category = {
+  id: number;
+  category_name: string;
+};
+
 type SummaryData = {
   total: number;
   weekTotal: number;
@@ -17,13 +22,12 @@ type SummaryData = {
     content: string;
     duration: number;
   }[];
+  categories: Category[];
 };
 
 export default function myProgress() {
   const [summary, setSummary] = useState<SummaryData | null>(null);
-  const [categories, setCategories] = useState<
-    { id: number; category_name: string }[]
-  >([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7f50", "#a4de6c"];
 
   useEffect(() => {
@@ -46,19 +50,16 @@ export default function myProgress() {
     loadCategories();
   }, []);
 
-  const categoryMap: Record<string, string> = categories.reduce(
-    (acc: Record<string, string>, category: any) => {
-      acc[category.id] = category.name;
+  const categoryMap =
+    summary?.categories.reduce((acc: Record<number, string>, category) => {
+      acc[category.id] = category.category_name;
       return acc;
-    },
-    {}
-  );
+    }, {}) || {};
 
-  // categoryTotal をチャート用データに変換
   const pieData =
     summary && categories.length > 0
       ? Object.entries(summary.categoryTotal).map(([key, value]) => ({
-          name: categoryMap[key] ?? `カテゴリー${key}`,
+          name: categoryMap[parseInt(key)] ?? `カテゴリー${key}`,
           value,
         }))
       : [];
@@ -70,7 +71,7 @@ export default function myProgress() {
       <main className="flex-grow px-4 py-10">
         {/* ヒーローセクション */}
         <section className="text-center mb-16">
-          <h1 className="mb-4">My Page</h1>
+          <h1 className="mb-4">My Progress</h1>
           <p className="text-gray-500 text-lg">
             ユーザー名さんの学習状況を確認
           </p>
@@ -144,8 +145,8 @@ export default function myProgress() {
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
                       <span className="font-semibold">{session.date}</span>
                       <span>
-                        {session.category_id} | {session.duration.toFixed(1)} |{" "}
-                        {session.content}
+                        {categoryMap[session.category_id]} |{" "}
+                        {session.duration.toFixed(1)} | {session.content}
                       </span>
                     </div>
                   </div>

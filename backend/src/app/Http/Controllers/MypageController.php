@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\StudySession;
 use Carbon\Carbon;
 
@@ -11,7 +12,8 @@ class MypageController extends Controller
     {
         $userId = 1;
 
-        $sessions = StudySession::with('rests')
+        $categories = Category::all();
+        $sessions = StudySession::with('rests','category')
             ->where('user_id', $userId)
             ->whereNotNull('finish_time')
             ->get();
@@ -81,6 +83,7 @@ class MypageController extends Controller
             'monthTotal' => $monthTotal,
             'categoryTotal' => $categoryTotals,
             'recentRecords' => $recentRecords,
+            'categories' => $categories,
         ]);
     }
 }
