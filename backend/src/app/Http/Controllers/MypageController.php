@@ -21,8 +21,8 @@ class MypageController extends Controller
         $startOfMonth = $now->copy()->startOfMonth();
 
         $total = 0;
-        $weekly = 0;
-        $monthly = 0;
+        $weekTotal = 0;
+        $monthTotal = 0;
         $categoryTotals = [];
         $processedSessions = [];
 
@@ -49,12 +49,12 @@ class MypageController extends Controller
 
             // 今週
             if ($start >= $startOfWeek) {
-                $weekly += $effectiveRounded;
+                $weekTotal += $effectiveRounded;
             }
 
             // 今月
             if ($start >= $startOfMonth) {
-                $monthly += $effectiveRounded;
+                $monthTotal += $effectiveRounded;
             }
 
             // カテゴリー別
@@ -77,9 +77,9 @@ class MypageController extends Controller
 
         return response()->json([
             'total' => $total,
-            'weekly' => $weekly,
-            'monthly' => $monthly,
-            'byCategory' => $categoryTotals,
+            'weekTotal' => $weekTotal,
+            'monthTotal' => $monthTotal,
+            'categoryTotal' => $categoryTotals,
             'recentRecords' => $recentRecords,
         ]);
     }
