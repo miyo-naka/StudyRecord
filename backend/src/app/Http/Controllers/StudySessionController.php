@@ -94,23 +94,24 @@ class StudySessionController extends Controller
         return response()->json(['message' => '学習終了しました']);
     }
 
-    //現在の状態を取得
-    public function status($userId){
+    // 現在の状態を取得
+    public function status($userId)
+    {
         $learningSession = StudySession::where('user_id', $userId)
-        ->whereNull('finish_time')
-        ->latest('start_time')
-        ->first();
+            ->whereNull('finish_time')
+            ->latest('start_time')
+            ->first();
 
-        if (!$learningSession) {
+        if (! $learningSession) {
             return response()->json([
                 'status' => 'idle',
             ]);
         }
 
         $latestRest = $learningSession->rests()
-        ->whereNull('rest_finish_time')
-        ->latest('rest_start_time')
-        ->first();
+            ->whereNull('rest_finish_time')
+            ->latest('rest_start_time')
+            ->first();
 
         if ($latestRest) {
             return response()->json([

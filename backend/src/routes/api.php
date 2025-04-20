@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MypageController;
 use App\Http\Controllers\RestController;
 use App\Http\Controllers\StudySessionController;
 use Illuminate\Http\Request;
@@ -32,3 +33,6 @@ Route::post('rests/finish', [RestController::class, 'finish']);
 
 // カテゴリー一覧取得
 Route::get('categories', [CategoryController::class, 'index']);
+
+// Mypage取得
+Route::get('mypage', [MypageController::class, 'mypage']);

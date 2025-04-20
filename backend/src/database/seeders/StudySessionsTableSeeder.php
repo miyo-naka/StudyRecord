@@ -17,8 +17,8 @@ class StudySessionsTableSeeder extends Seeder
             'user_id' => 1,
             'category_id' => 1,
             'content' => 'testA',
-            'start_time' => Carbon::now(),
-            'finish_time' => Carbon::now(),
+            'start_time' => '2025-04-1 11:00:00',
+            'finish_time' => '2025-04-1 16:53:47',
         ];
         DB::table('study_sessions')->insert($param);
 
