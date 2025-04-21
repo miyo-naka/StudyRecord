@@ -2,7 +2,7 @@
 
 import Header from "@/components/Header";
 import fetchCategories from "@/services/category/fetchCategories";
-import fetchMypage from "@/services/mypage/fetchMypage";
+import fetchMyProgress from "@/services/calculator/fetchMyProgress";
 import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
@@ -29,11 +29,12 @@ export default function myProgress() {
   const [summary, setSummary] = useState<SummaryData | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7f50", "#a4de6c"];
+  const minutesToHours = (minutes: number) => (minutes / 60).toFixed(1);
 
   useEffect(() => {
     const fetchSummary = async () => {
       try {
-        const data = await fetchMypage();
+        const data = await fetchMyProgress();
         setSummary(data);
       } catch (error) {
         console.error("マイページデータ取得エラー:", error);
@@ -60,7 +61,7 @@ export default function myProgress() {
     summary && categories.length > 0
       ? Object.entries(summary.categoryTotal).map(([key, value]) => ({
           name: categoryMap[parseInt(key)] ?? `カテゴリー${key}`,
-          value,
+          value: Math.round((value / 60) * 10) / 10, // 分を時間に変換（小数1桁）
         }))
       : [];
 
@@ -86,19 +87,19 @@ export default function myProgress() {
               <div className="bg-white shadow rounded-2xl p-4">
                 <p className="text-sm text-gray-500">今週の学習時間</p>
                 <p className="text-xl font-bold text-indigo-600">
-                  {summary.weekTotal.toFixed(1)}時間
+                  {minutesToHours(summary.weekTotal)}時間
                 </p>
               </div>
               <div className="bg-white shadow rounded-2xl p-4">
                 <p className="text-sm text-gray-500">今月の学習時間</p>
                 <p className="text-xl font-bold text-green-600">
-                  {summary.monthTotal.toFixed(1)}時間
+                  {minutesToHours(summary.monthTotal)}時間
                 </p>
               </div>
               <div className="bg-white shadow rounded-2xl p-4">
                 <p className="text-sm text-gray-500">トータル</p>
                 <p className="text-xl font-bold text-amber-600">
-                  {summary.total.toFixed(1)}時間
+                  {minutesToHours(summary.total)}時間
                 </p>
               </div>
             </section>
@@ -146,7 +147,7 @@ export default function myProgress() {
                       <span className="font-semibold">{session.date}</span>
                       <span>
                         {categoryMap[session.category_id]} |{" "}
-                        {session.duration.toFixed(1)} | {session.content}
+                        {minutesToHours(session.duration)} | {session.content}
                       </span>
                     </div>
                   </div>

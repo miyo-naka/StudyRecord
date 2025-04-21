@@ -2,65 +2,36 @@
 
 import Header from "@/components/Header";
 import { useEffect, useState } from "react";
-import fetchStudySessions from "@/services/studySession/fetchStudySession";
+import fetchStudySessions, {
+  Pagination,
+  StudySession,
+} from "@/services/studySession/fetchStudySession";
 
 export default function history() {
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useState<StudySession[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
 
-  //学習時間を取得して計算
+  //学習時間を取得
   useEffect(() => {
-    const fetchSessions = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetchStudySessions(currentPage);
-        const processedData = response.data.map((session: any) => {
-          const date = new Date(session.start_time).toISOString().split("T")[0];
-
-          if (!session.finish_time) {
-            return {
-              ...session,
-              date,
-              duration: "Learning",
-            };
-          }
-
-          // セッション全体の学習時間（ミリ秒）
-          const totalDurationMs =
-            new Date(session.finish_time).getTime() -
-            new Date(session.start_time).getTime();
-
-          // 休憩時間の合計（ミリ秒）
-          const totalRestMs =
-            session.rests?.reduce((acc: number, rest: any) => {
-              if (rest.finish_time) {
-                const restDuration =
-                  new Date(rest.finish_time).getTime() -
-                  new Date(rest.start_time).getTime();
-                return acc + restDuration;
-              }
-              return acc;
-            }, 0) ?? 0;
-
-          // 有効な学習時間（ミリ秒 → 時間へ変換）
-          const effectiveDurationHours =
-            (totalDurationMs - totalRestMs) / 1000 / 60 / 60;
-          const duration = Math.floor(effectiveDurationHours * 10) / 10;
-
-          return {
-            ...session,
-            date: date,
-            duration: duration,
-          };
-        });
-        setSessions(processedData);
-        setLastPage(response.last_page);
-      } catch (error) {
-        console.error("取得エラー:", error);
+        const { data, pagination } = await fetchStudySessions(currentPage);
+        setSessions(data);
+        setLastPage(pagination.last_page);
+      } catch (err) {
+        console.error(err);
       }
     };
-    fetchSessions();
+    fetchData();
   }, [currentPage]);
+
+  //時間表示をHH:MMに変換
+  const formatMinutesToHHMM = (minutes: number): string => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours}:${mins.toString().padStart(2, "0")}`;
+  };
 
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col font-sans">
@@ -95,8 +66,8 @@ export default function history() {
                   className="[&>td]:py-3 [&>td]:px-4 hover:bg-gray-50 transition-colors"
                 >
                   <td>{session.date}</td>
-                  <td>{session.duration}</td>
-                  <td>{session.category.category_name}</td>
+                  <td>{formatMinutesToHHMM(session.duration_minutes)}</td>
+                  <td>{session.category_name}</td>
                   <td>{session.content}</td>
                   <td>
                     <button className="text-sm text-blue-600 hover:underline">
