@@ -6,7 +6,7 @@ export default function Header() {
     <div className="flex justify-between">
       <div className="m-2 h-10">
         <Link href="/" className="flex items-center h-full">
-          <img className="h-8 w-8 mr-1" src="/android-chrome-192x192.png" />
+          <img className="h-10 w-10 mr-1" src="/android-chrome-192x192.png" />
           <p className="text-lg font-semibold">Leaning Tracker</p>
         </Link>
       </div>
