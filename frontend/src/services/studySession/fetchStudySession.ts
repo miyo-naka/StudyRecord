@@ -1,3 +1,19 @@
+export type StudySession = {
+  id: number;
+  date: string;
+  category_id: number;
+  category_name: string;
+  content: string;
+  duration_minutes: number;
+};
+
+export type Pagination = {
+  total: number;
+  per_page: number;
+  current_page: number;
+  last_page: number;
+};
+
 export default async function fetchStudySessions(page: number) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/study-sessions?page=${page}`,
@@ -14,5 +30,8 @@ export default async function fetchStudySessions(page: number) {
   }
 
   const jsondata = await res.json();
-  return jsondata.data;
+  return {
+    data: jsondata.data,
+    pagination: jsondata.pagination,
+  };
 }

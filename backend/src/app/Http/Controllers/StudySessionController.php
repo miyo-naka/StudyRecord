@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\StudySession;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class StudySessionController extends Controller
@@ -13,11 +14,48 @@ class StudySessionController extends Controller
      */
     public function index()
     {
-        $sessions = StudySession::with(['user', 'category', 'rests'])->paginate(10);
+        $userId = 1; // 認証未対応のため固定
+
+        $sessions = StudySession::with(['category', 'rests'])
+            ->where('user_id', $userId)
+            ->orderByDesc('start_time')
+            ->paginate(10);
+
+        $processedSessions = $sessions->getCollection()->map(function ($session) {
+            $start = Carbon::parse($session->start_time);
+            $finish = Carbon::parse($session->finish_time);
+            $totalDurationMs = $finish->diffInMilliseconds($start);
+
+            $restDurationMs = 0;
+            foreach ($session->rests as $rest) {
+                if ($rest->rest_finish_time) {
+                    $restStart = Carbon::parse($rest->rest_start_time);
+                    $restFinish = Carbon::parse($rest->rest_finish_time);
+                    $restDurationMs += $restFinish->diffInMilliseconds($restStart);
+                }
+            }
+
+            $effectiveMinutes = floor(($totalDurationMs - $restDurationMs) / 1000 / 60);
+
+            return [
+                'id' => $session->id,
+                'date' => $session->start_time->format('Y-m-d'),
+                'category_id' => $session->category_id,
+                'category_name' => optional($session->category)->category_name,
+                'content' => $session->content,
+                'duration_minutes' => $effectiveMinutes,
+            ];
+        });
 
         return response()->json([
-            'data' => $sessions,
-        ], 200);
+            'data' => $processedSessions,
+            'pagination' => [
+                'total' => $sessions->total(),
+                'per_page' => $sessions->perPage(),
+                'current_page' => $sessions->currentPage(),
+                'last_page' => $sessions->lastPage(),
+            ],
+        ]);
     }
 
     /**
