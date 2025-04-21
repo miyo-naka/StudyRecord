@@ -4,12 +4,13 @@ import Link from "next/link";
 export default function Header() {
   return (
     <div className="flex justify-between">
-      <div>
-        <Link href="/">
-          <img className="m-4" src="/" alt="Leaning Tracker" />
+      <div className="m-2 h-10">
+        <Link href="/" className="flex items-center h-full">
+          <img className="h-8 w-8 mr-1" src="/android-chrome-192x192.png" />
+          <p className="text-lg font-semibold">Leaning Tracker</p>
         </Link>
       </div>
-      <div className="m-4 flex justify-end gap-4">
+      <div className="m-4 flex justify-end">
         <Link href="/">
           <button className="bg-gray-100 text-gray-800 px-6 py-2 rounded-full hover:bg-gray-200 transition shadow-sm">
             Home
