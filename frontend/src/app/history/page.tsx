@@ -6,11 +6,17 @@ import fetchStudySessions, {
   Pagination,
   StudySession,
 } from "@/services/studySession/fetchStudySession";
+import UpdateLearningModal from "@/components/UpdateLearningModal";
+import showStudySessions from "@/services/studySession/showStudySession";
+import deleteStudySession from "@/services/studySession/deleteStudySession";
 
 export default function history() {
   const [sessions, setSessions] = useState<StudySession[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [updateTrigger, setUpdateTrigger] = useState(false);
 
   //学習時間を取得
   useEffect(() => {
@@ -24,13 +30,38 @@ export default function history() {
       }
     };
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, updateTrigger]);
 
   //時間表示をHH:MMに変換
   const formatMinutesToHHMM = (minutes: number): string => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     return `${hours}:${mins.toString().padStart(2, "0")}`;
+  };
+
+  //更新処理(モーダル)
+  const handleEdit = async (session: any) => {
+    const data = await showStudySessions(session.id);
+    setSelectedSession(data);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedSession(null);
+  };
+  const handleUpdated = () => {
+    setUpdateTrigger((prev) => !prev);
+  };
+
+  //削除処理
+  const handleDelete = async (session: any) => {
+    const isConfirmed = confirm(`削除してもいいですか？`);
+    if (!isConfirmed) return;
+    else {
+      await deleteStudySession(session.id);
+      setUpdateTrigger((prev) => !prev);
+    }
   };
 
   return (
@@ -70,12 +101,18 @@ export default function history() {
                   <td>{session.category_name}</td>
                   <td>{session.content}</td>
                   <td>
-                    <button className="text-sm text-blue-600 hover:underline">
+                    <button
+                      onClick={() => handleEdit(session)}
+                      className="text-sm text-blue-600 hover:underline"
+                    >
                       編集
                     </button>
                   </td>
                   <td>
-                    <button className="text-sm text-red-500 hover:underline">
+                    <button
+                      onClick={() => handleDelete(session)}
+                      className="text-sm text-red-500 hover:underline"
+                    >
                       削除
                     </button>
                   </td>
@@ -84,6 +121,14 @@ export default function history() {
             </tbody>
           </table>
         </div>
+
+        {/* 編集モーダル */}
+        <UpdateLearningModal
+          isOpen={isModalOpen}
+          onClose={handleModalClose}
+          session={selectedSession}
+          onUpdated={handleUpdated}
+        />
 
         {/* ページネーション */}
         <div className="flex justify-center gap-2 mt-4">
