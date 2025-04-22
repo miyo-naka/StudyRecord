@@ -15,9 +15,10 @@ export default function register() {
     e.preventDefault();
     setError("");
     try {
-      await Register;
-      router.push("/thanks");
-    } catch (err) {
+      await Register(name, email, password);
+      router.push("/auth/thanks");
+    } catch (err: any) {
+      console.error("Register Error:", err.response?.data);
       setError("登録に失敗しました");
     }
   };
@@ -29,6 +30,7 @@ export default function register() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
+          name="name"
           placeholder="Name"
           className="w-full p-2 border rounded"
           value={name}
@@ -36,6 +38,7 @@ export default function register() {
         />
         <input
           type="email"
+          name="email"
           placeholder="Email"
           className="w-full p-2 border rounded"
           value={email}
@@ -43,6 +46,7 @@ export default function register() {
         />
         <input
           type="password"
+          name="password"
           placeholder="Password"
           className="w-full p-2 border rounded"
           value={password}
