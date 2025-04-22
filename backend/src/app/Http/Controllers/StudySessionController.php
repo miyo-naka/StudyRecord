@@ -48,14 +48,14 @@ class StudySessionController extends Controller
         });
 
         return response()->json([
-            'data' => $processedSessions,
-            'pagination' => [
-                'total' => $sessions->total(),
-                'per_page' => $sessions->perPage(),
-                'current_page' => $sessions->currentPage(),
-                'last_page' => $sessions->lastPage(),
-            ],
-        ]);
+                'data' => $processedSessions,
+                'pagination' => [
+                    'total' => $sessions->total(),
+                    'per_page' => $sessions->perPage(),
+                    'current_page' => $sessions->currentPage(),
+                    'last_page' => $sessions->lastPage(),
+                ],
+            ]);
     }
 
     /**
@@ -79,7 +79,15 @@ class StudySessionController extends Controller
      */
     public function show(StudySession $studySession)
     {
-        //
+        $studySession->load(['category', 'rests']);
+
+        return response()->json([
+            'id' => $studySession->id,
+            'category_id' => $studySession->category_id,
+            'content' => $studySession->content,
+            'start_time' => $studySession->start_time,
+            'finish_time' => $studySession->finish_time,
+        ]);
     }
 
     /**

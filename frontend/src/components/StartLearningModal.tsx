@@ -40,7 +40,6 @@ export default function StartLearningModal({
         category_id: categoryId,
         content: content,
       });
-      console.log(newSession); // ← デバッグ用
       setContent("");
       onSessionCreated(newSession.id);
       onClose();
@@ -73,7 +72,7 @@ export default function StartLearningModal({
         </div>
 
         <div className="mb-3">
-          <label className="block text-sm font-medium">学習内容</label>
+          <label className="block text-sm font-medium">Content</label>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
