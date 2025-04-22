@@ -8,6 +8,7 @@ import fetchStudySessions, {
 } from "@/services/studySession/fetchStudySession";
 import UpdateLearningModal from "@/components/UpdateLearningModal";
 import showStudySessions from "@/services/studySession/showStudySession";
+import deleteStudySession from "@/services/studySession/deleteStudySession";
 
 export default function history() {
   const [sessions, setSessions] = useState<StudySession[]>([]);
@@ -51,6 +52,16 @@ export default function history() {
   };
   const handleUpdated = () => {
     setUpdateTrigger((prev) => !prev);
+  };
+
+  //削除処理
+  const handleDelete = async (session: any) => {
+    const isConfirmed = confirm(`削除してもいいですか？`);
+    if (!isConfirmed) return;
+    else {
+      await deleteStudySession(session.id);
+      setUpdateTrigger((prev) => !prev);
+    }
   };
 
   return (
@@ -98,7 +109,10 @@ export default function history() {
                     </button>
                   </td>
                   <td>
-                    <button className="text-sm text-red-500 hover:underline">
+                    <button
+                      onClick={() => handleDelete(session)}
+                      className="text-sm text-red-500 hover:underline"
+                    >
                       削除
                     </button>
                   </td>
