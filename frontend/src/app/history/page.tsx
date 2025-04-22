@@ -29,7 +29,7 @@ export default function history() {
       }
     };
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, updateTrigger]);
 
   //時間表示をHH:MMに変換
   const formatMinutesToHHMM = (minutes: number): string => {

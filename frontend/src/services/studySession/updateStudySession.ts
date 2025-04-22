@@ -3,8 +3,8 @@ import { StudySession } from "./createStudySession";
 export type UpdateStudySessionInput = {
   category_id: number;
   content: string;
-  start_time: Date;
-  finish_time: Date;
+  start_time: string;
+  finish_time: string;
 };
 
 export default async function updateStudySession(

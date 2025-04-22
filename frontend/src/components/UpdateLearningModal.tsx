@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 import fetchCategories from "@/services/category/fetchCategories";
-import updateStudySession, {
-  UpdateStudySessionInput,
-} from "@/services/studySession/updateStudySession";
+import updateStudySession from "@/services/studySession/updateStudySession";
 
 type UpdateLearningModalProps = {
   isOpen: boolean;
@@ -49,12 +47,13 @@ export default function UpdateLearningModal({
   function formatDateForInput(date: string | Date | null): string {
     if (!date) return "";
     const d = typeof date === "string" ? new Date(date) : date;
-    return d.toISOString().slice(0, 16);
+    const offset = d.getTimezoneOffset();
+    const localDate = new Date(d.getTime() - offset * 60 * 1000);
+    return localDate.toISOString().slice(0, 16);
   }
 
   useEffect(() => {
     if (session && isOpen) {
-      console.log("初期session", session); //debag
       setFormData({
         category_id: session.category_id,
         content: session.content ?? "",
@@ -73,7 +72,7 @@ export default function UpdateLearningModal({
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name.includes("time") ? new Date(value) : value,
+      [name]: value,
     }));
   };
 
@@ -82,9 +81,10 @@ export default function UpdateLearningModal({
     if (!session) return;
     try {
       await updateStudySession(session.id, {
-        ...formData,
-        start_time: new Date(formData.start_time),
-        finish_time: new Date(formData.finish_time),
+        category_id: Number(formData.category_id),
+        content: formData.content,
+        start_time: formData.start_time.replace("T", ":") + ":00",
+        finish_time: formData.finish_time.replace("T", ":") + ":00",
       });
       onClose();
       onUpdated?.();
@@ -103,6 +103,7 @@ export default function UpdateLearningModal({
         <div className="mb-3">
           <label className="block text-sm font-medium">Category</label>
           <select
+            name="category_id"
             value={formData.category_id}
             onChange={handleChange}
             className="mt-1 p-2 border rounded w-full"
@@ -118,6 +119,7 @@ export default function UpdateLearningModal({
         <div className="mb-3">
           <label className="block text-sm font-medium">Content</label>
           <textarea
+            name="content"
             value={formData.content}
             onChange={handleChange}
             className="mt-1 p-2 border rounded w-full"
@@ -128,7 +130,7 @@ export default function UpdateLearningModal({
           <label className="block mb-2">
             Hours
             <input
-              name="duration_minutes"
+              name="start_time"
               type="datetime-local"
               value={formData.start_time}
               onChange={handleChange}
