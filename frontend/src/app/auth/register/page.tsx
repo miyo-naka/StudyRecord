@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Register from "@/services/auth/Register";
+import Link from "next/link";
 
 export default function register() {
   const [email, setEmail] = useState("");
@@ -59,6 +60,12 @@ export default function register() {
           登録
         </button>
       </form>
+      <Link
+        href={"/auth/login"}
+        className="mt-4 text-blue-800 hover:text-blue-500"
+      >
+        ログインはこちら
+      </Link>
     </div>
   );
 }

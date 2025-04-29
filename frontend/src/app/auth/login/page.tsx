@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Login from "@/services/auth/Login";
+import Link from "next/link";
 
 export default function login() {
   const [email, setEmail] = useState("");
@@ -15,8 +16,9 @@ export default function login() {
     setError("");
     try {
       await Login(email, password);
-      router.push("/"); // 任意の遷移先
+      router.push("/");
     } catch (err: any) {
+      console.error("Login Error:", err.response?.data);
       setError("ログインに失敗しました");
     }
   };
@@ -47,6 +49,12 @@ export default function login() {
           ログイン
         </button>
       </form>
+      <Link
+        href={"/auth/register"}
+        className="mt-4 text-blue-800 hover:text-blue-500"
+      >
+        会員登録はこちら
+      </Link>
     </div>
   );
 }
