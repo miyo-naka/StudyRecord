@@ -1,8 +1,9 @@
 export default async function fetchCategories() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`, {
     method: "GET",
+    credentials: "include",
     headers: {
-      "Content-Type": "application/json",
+      Accept: "application/json",
     },
   });
 

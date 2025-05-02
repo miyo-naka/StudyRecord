@@ -36,7 +36,6 @@ export default function StartLearningModal({
     try {
       setLoading(true);
       const newSession = await createStudySession({
-        user_id: 1, // ← 認証未実装のため仮のuser_id
         category_id: categoryId,
         content: content,
       });

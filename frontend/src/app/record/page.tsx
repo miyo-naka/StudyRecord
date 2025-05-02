@@ -19,8 +19,7 @@ export default function record() {
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const userId = 1; // ← 認証未実装のため仮のuser_id
-        const data = await statusStudySession(userId);
+        const data = await statusStudySession();
         console.log(data);
         setStatus(data.status);
         if (data.session_id) {

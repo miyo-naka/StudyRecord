@@ -1,10 +1,12 @@
+"use client";
+
 import ContentsCard from "@/components/ContentsCard";
 import Header from "@/components/Header";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col font-sans">
-      {/* <Header /> */}
+      <Header />
 
       <main className="flex-grow px-4 py-10">
         {/* ヒーローセクション */}
