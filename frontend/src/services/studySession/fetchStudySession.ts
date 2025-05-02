@@ -15,12 +15,21 @@ export type Pagination = {
 };
 
 export default async function fetchStudySessions(page: number) {
+  // const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/test-auth`, {
+  //   credentials: "include",
+  //   headers: {
+  //     Accept: "application/json",
+  //   },
+  // });
+  // const json = await res.json();
+  // console.log(json);
+
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/study-sessions?page=${page}`,
     {
-      method: "GET",
+      credentials: "include",
       headers: {
-        "Content-Type": "application/json",
+        Accept: "application/json",
       },
     }
   );

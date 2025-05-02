@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\StudySession;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StudySessionController extends Controller
 {
@@ -14,7 +15,7 @@ class StudySessionController extends Controller
      */
     public function index()
     {
-        $userId = 1; // 認証未対応のため固定
+        $userId = Auth::id();
 
         $sessions = StudySession::with(['category', 'rests'])
             ->where('user_id', $userId)
@@ -64,8 +65,9 @@ class StudySessionController extends Controller
      */
     public function store(Request $request)
     {
+        $userId = Auth::id();
         $study_session = StudySession::create([
-            'user_id' => $request->user_id,
+            'user_id' => $userId,
             'category_id' => $request->category_id,
             'content' => $request->content,
             'start_time' => now(),
@@ -141,8 +143,9 @@ class StudySessionController extends Controller
     }
 
     // 現在の状態を取得
-    public function status($userId)
+    public function status()
     {
+        $userId = Auth::id();
         $learningSession = StudySession::where('user_id', $userId)
             ->whereNull('finish_time')
             ->latest('start_time')

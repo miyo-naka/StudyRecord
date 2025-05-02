@@ -3,8 +3,9 @@ export default async function showStudySessions(sessionId: number) {
     `${process.env.NEXT_PUBLIC_API_URL}/api/study-sessions/${sessionId}`,
     {
       method: "GET",
+      credentials: "include",
       headers: {
-        "Content-Type": "application/json",
+        Accept: "application/json",
       },
     }
   );
