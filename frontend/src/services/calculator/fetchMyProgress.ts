@@ -1,8 +1,9 @@
 export default async function fetchMyProgress() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/culculator`, {
     method: "GET",
+    credentials: "include",
     headers: {
-      "Content-Type": "application/json",
+      Accept: "application/json",
     },
   });
 

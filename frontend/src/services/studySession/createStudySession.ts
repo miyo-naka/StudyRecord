@@ -1,5 +1,6 @@
+import getCookieValue from "../auth/getCookieValue";
+
 export type CreateStudySessionInput = {
-  user_id: number;
   category_id: number;
   content: string;
 };
@@ -16,12 +17,16 @@ export type StudySession = {
 export default async function createStudySession(
   input: CreateStudySessionInput
 ): Promise<StudySession> {
+  const token = getCookieValue("XSRF-TOKEN");
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/study-sessions`,
     {
       method: "POST",
+      credentials: "include",
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/json",
+        "X-XSRF-TOKEN": decodeURIComponent(token ?? ""),
       },
       body: JSON.stringify(input),
     }
