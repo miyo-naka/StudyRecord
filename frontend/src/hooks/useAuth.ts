@@ -1,4 +1,3 @@
-// hooks/useAuth.ts
 import fetchUser from "@/services/auth/FetchUser";
 import Login from "@/services/auth/Login";
 import logout from "@/services/auth/Logout";
@@ -6,13 +5,16 @@ import { useEffect, useState } from "react";
 
 export const useAuth = () => {
   const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   const getUser = async () => {
     try {
-      const { data } = await fetchUser();
-      setUser(data);
+      const user = await fetchUser();
+      setUser(user);
     } catch (error) {
       setUser(null);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -30,5 +32,5 @@ export const useAuth = () => {
     getUser();
   }, []);
 
-  return { user, handleLogin, handleLogout };
+  return { user, loading, handleLogin, handleLogout };
 };

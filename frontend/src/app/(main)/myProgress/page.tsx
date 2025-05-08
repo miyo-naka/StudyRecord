@@ -73,9 +73,7 @@ export default function myProgress() {
         {/* ヒーローセクション */}
         <section className="text-center mb-16">
           <h1 className="mb-4">My Progress</h1>
-          <p className="text-gray-500 text-lg">
-            ユーザー名さんの学習状況を確認
-          </p>
+          <p className="text-gray-500 text-lg">学習状況を確認</p>
         </section>
 
         {/* 情報表示エリア */}
