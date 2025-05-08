@@ -13,7 +13,6 @@ export default function MainLayout({
   const router = useRouter();
 
   useEffect(() => {
-    console.log("user:", user, "loading:", loading);
     if (!loading && !user) {
       router.replace("/auth/login");
     }

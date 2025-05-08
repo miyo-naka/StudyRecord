@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\StudySession;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class CulculatorController extends Controller
 {
     public function myProgress()
     {
-        $userId = 1;
+        $userId = Auth::id();
+        $userName = User::select('name')->find($userId);
 
         $categories = Category::all();
         $sessions = StudySession::with('rests', 'category')
@@ -84,6 +87,7 @@ class CulculatorController extends Controller
             'categoryTotal' => $categoryTotals,
             'recentRecords' => $recentRecords,
             'categories' => $categories,
+            'userName' => $userName,
         ]);
     }
 }
