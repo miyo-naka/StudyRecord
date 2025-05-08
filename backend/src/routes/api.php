@@ -35,7 +35,7 @@ Route::middleware('auth:sanctum')->group(function(){
     // Mypage取得
     Route::get('culculator', [CulculatorController::class, 'myProgress']);
 
-    Route::get('/test-auth', function () {
+    Route::get('/user', function () {
         return response()->json(['user' => Auth::user()]);});
 });
 

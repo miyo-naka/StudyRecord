@@ -23,6 +23,7 @@ type SummaryData = {
     duration: number;
   }[];
   categories: Category[];
+  userName: { name: string };
 };
 
 export default function myProgress() {
@@ -74,7 +75,7 @@ export default function myProgress() {
         <section className="text-center mb-16">
           <h1 className="mb-4">My Progress</h1>
           <p className="text-gray-500 text-lg">
-            ユーザー名さんの学習状況を確認
+            {summary?.userName?.name}さんの学習状況を確認
           </p>
         </section>
 
