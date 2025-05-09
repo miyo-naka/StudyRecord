@@ -2,8 +2,8 @@
 ## 学びを記録して、成長を見える化しよう
 
 ＜ログイン／新規登録ページ＞<br>
-ログインしていない状態ではログイン画面に遷移します
-<kbd><img src="https://github.com/user-attachments/assets/59e5e742-e4d2-4ed4-bf23-c1037d7ba8db" width=60%></kbd><br><br>
+ログインしていない状態ではログイン画面に遷移します<br>
+<img src="https://github.com/user-attachments/assets/d7cb989e-8a06-424a-9883-5e0321ab9b4c" width=60%><br><br>
 
 ＜トップページ＞<br>
 記録、今までの一覧、学習記録のまとめ、マイページへのボタン
