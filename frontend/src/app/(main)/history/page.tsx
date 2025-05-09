@@ -9,6 +9,7 @@ import fetchStudySessions, {
 import UpdateLearningModal from "@/components/UpdateLearningModal";
 import showStudySessions from "@/services/studySession/showStudySession";
 import deleteStudySession from "@/services/studySession/deleteStudySession";
+import fetchCategories from "@/services/category/fetchCategories";
 
 export default function history() {
   const [sessions, setSessions] = useState<StudySession[]>([]);
@@ -17,6 +18,11 @@ export default function history() {
   const [selectedSession, setSelectedSession] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updateTrigger, setUpdateTrigger] = useState(false);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
+  const [categories, setCategories] = useState<
+    { id: number; category_name: string }[]
+  >([]);
 
   //学習時間を取得
   useEffect(() => {
@@ -32,12 +38,45 @@ export default function history() {
     fetchData();
   }, [currentPage, updateTrigger]);
 
+  //カテゴリーを取得
+  useEffect(() => {
+    const loadCategories = async () => {
+      const data = await fetchCategories();
+      setCategories(data);
+    };
+    loadCategories();
+  }, []);
+
   //時間表示をHH:MMに変換
   const formatMinutesToHHMM = (minutes: number): string => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     return `${hours}:${mins.toString().padStart(2, "0")}`;
   };
+
+  // 並び順を変更する関数
+  const toggleSortOrder = () => {
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    setCurrentPage(1); // ソート順を変えたらページをリセット
+  };
+
+  // データを日付順に並べ替える関数
+  const sortSessions = (sessions: any[], order: "asc" | "desc") => {
+    return [...sessions].sort((a, b) => {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+      return order === "asc" ? dateA - dateB : dateB - dateA;
+    });
+  };
+  const sortedSessions = sortSessions(sessions, sortOrder);
+
+  //フィルタリング機能を追加
+  const filteredSessions =
+    selectedCategoryId === 0
+      ? sortedSessions
+      : sortedSessions.filter(
+          (session) => session.category_id === selectedCategoryId
+        );
 
   //更新処理(モーダル)
   const handleEdit = async (session: any) => {
@@ -82,16 +121,37 @@ export default function history() {
           <table className="w-full table-auto">
             <thead className="bg-gray-100">
               <tr className="[&>th]:py-3 [&>th]:px-4 text-left text-sm font-semibold text-gray-700">
-                <th>Date</th>
+                <th>
+                  Date
+                  <button onClick={toggleSortOrder}>
+                    {sortOrder === "asc" ? "　▲" : "　▼"}
+                  </button>
+                </th>
                 <th>Hours</th>
-                <th>Category</th>
+                <th>
+                  Category
+                  <select
+                    value={selectedCategoryId}
+                    onChange={(e) =>
+                      setSelectedCategoryId(Number(e.target.value))
+                    }
+                    className="text-gray-500 flex border border-gray-500 rounded"
+                  >
+                    <option value={0}>All</option>
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.category_name}
+                      </option>
+                    ))}
+                  </select>
+                </th>
                 <th>Content</th>
                 <th></th>
                 <th></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {sessions.map((session: any) => (
+              {filteredSessions.map((session: any) => (
                 <tr
                   key={session.id}
                   className="[&>td]:py-3 [&>td]:px-4 hover:bg-gray-50 transition-colors"

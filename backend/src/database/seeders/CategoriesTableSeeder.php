@@ -12,24 +12,15 @@ class CategoriesTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $param = [
+        $param = [[
             'category_name' => 'Programming',
-        ];
-        DB::table('categories')->insert($param);
-
-        $param = [
+        ],[
             'category_name' => 'Data Analyse',
-        ];
-        DB::table('categories')->insert($param);
-
-        $param = [
+        ], [
             'category_name' => 'English',
-        ];
-        DB::table('categories')->insert($param);
-
-        $param = [
+        ],[
             'category_name' => 'Other',
-        ];
+        ]];
         DB::table('categories')->insert($param);
 
     }
