@@ -9,7 +9,6 @@ import fetchStudySessions, {
 import UpdateLearningModal from "@/components/UpdateLearningModal";
 import showStudySessions from "@/services/studySession/showStudySession";
 import deleteStudySession from "@/services/studySession/deleteStudySession";
-import fetchCategories from "@/services/category/fetchCategories";
 
 export default function history() {
   const [sessions, setSessions] = useState<StudySession[]>([]);
@@ -19,10 +18,6 @@ export default function history() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updateTrigger, setUpdateTrigger] = useState(false);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
-  const [categories, setCategories] = useState<
-    { id: number; category_name: string }[]
-  >([]);
 
   //学習時間を取得
   useEffect(() => {
@@ -37,15 +32,6 @@ export default function history() {
     };
     fetchData();
   }, [currentPage, updateTrigger]);
-
-  //カテゴリーを取得
-  useEffect(() => {
-    const loadCategories = async () => {
-      const data = await fetchCategories();
-      setCategories(data);
-    };
-    loadCategories();
-  }, []);
 
   //時間表示をHH:MMに変換
   const formatMinutesToHHMM = (minutes: number): string => {
@@ -69,14 +55,6 @@ export default function history() {
     });
   };
   const sortedSessions = sortSessions(sessions, sortOrder);
-
-  //フィルタリング機能を追加
-  const filteredSessions =
-    selectedCategoryId === 0
-      ? sortedSessions
-      : sortedSessions.filter(
-          (session) => session.category_id === selectedCategoryId
-        );
 
   //更新処理(モーダル)
   const handleEdit = async (session: any) => {
@@ -128,30 +106,14 @@ export default function history() {
                   </button>
                 </th>
                 <th>Hours</th>
-                <th>
-                  Category
-                  <select
-                    value={selectedCategoryId}
-                    onChange={(e) =>
-                      setSelectedCategoryId(Number(e.target.value))
-                    }
-                    className="text-gray-500 flex border border-gray-500 rounded"
-                  >
-                    <option value={0}>All</option>
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.category_name}
-                      </option>
-                    ))}
-                  </select>
-                </th>
+                <th>Category</th>
                 <th>Content</th>
                 <th></th>
                 <th></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {filteredSessions.map((session: any) => (
+              {sortedSessions.map((session: any) => (
                 <tr
                   key={session.id}
                   className="[&>td]:py-3 [&>td]:px-4 hover:bg-gray-50 transition-colors"
