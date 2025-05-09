@@ -33,7 +33,7 @@ export default function register() {
           type="text"
           name="name"
           placeholder="Name"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 bg-white border rounded"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -41,7 +41,7 @@ export default function register() {
           type="email"
           name="email"
           placeholder="Email"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 bg-white border rounded"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -49,7 +49,7 @@ export default function register() {
           type="password"
           name="password"
           placeholder="Password"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 bg-white border rounded"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
