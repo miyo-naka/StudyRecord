@@ -1,9 +1,40 @@
 "use client";
 
 import Header from "@/components/Header";
-import React from "react";
+import fetchUser from "@/services/auth/FetchUser";
+import updateUser from "@/services/user/updateUser";
+import React, { useEffect, useState } from "react";
 
 export default function Mypage() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  //ユーザー情報を取得
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const data = await fetchUser();
+        setName(data.user.name);
+        setEmail(data.user.email);
+      } catch (error) {
+        console.error("Userデータ取得エラー:", error);
+      }
+    };
+    getUser();
+  }, []);
+
+  //更新
+  const handleSubmit = async (e: React.FormEvent) => {
+    try {
+      await updateUser({ name, email, password });
+      alert("ユーザー情報を更新しました");
+      setPassword("");
+    } catch (error) {
+      alert("更新に失敗しました");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col font-sans">
       <Header />
@@ -22,38 +53,45 @@ export default function Mypage() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               ユーザー名
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
             </label>
-            <input
-              type="text"
-              className="w-full border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="ユーザー名を入力"
-            />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               メールアドレス
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
             </label>
-            <input
-              type="email"
-              className="w-full border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="email@example.com"
-            />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               パスワード（変更時のみ）
+              <input
+                type="password"
+                className="w-full border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="新しいパスワード"
+              />
             </label>
-            <input
-              type="password"
-              className="w-full border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="新しいパスワード"
-            />
           </div>
 
           <div className="text-right">
-            <button className="bg-blue-500 text-white font-semibold px-6 py-2 rounded-xl hover:bg-blue-600 transition">
+            <button
+              className="bg-blue-500 text-white font-semibold px-6 py-2 rounded-xl hover:bg-blue-600 transition"
+              onClick={handleSubmit}
+            >
               保存する
             </button>
           </div>

@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CulculatorController;
 use App\Http\Controllers\RestController;
 use App\Http\Controllers\StudySessionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -32,9 +33,13 @@ Route::middleware('auth:sanctum')->group(function(){
     // カテゴリー一覧取得
     Route::get('categories', [CategoryController::class, 'index']);
 
-    // Mypage取得
+    // MyProgress計算結果取得
     Route::get('culculator', [CulculatorController::class, 'myProgress']);
 
+    //　MyPage更新
+    Route::put('user', [UserController::class, 'update']);
+
+    //ユーザー情報取得
     Route::get('/user', function () {
         return response()->json(['user' => Auth::user()]);});
 });
