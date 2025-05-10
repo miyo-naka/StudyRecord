@@ -119,29 +119,32 @@ export default function Mypage() {
         </section>
 
         {/* Excelからのインポート */}
-        <input
-          type="file"
-          accept=".csv"
-          ref={fileInputRef}
-          onChange={(e) => {
-            if (e.target.files && e.target.files[0]) {
-              setSelectedFile(e.target.files[0]);
-            }
-          }}
-          className="text-sm text-gray-600
+        <section className="max-w-xl mx-auto bg-white shadow-md rounded-2xl m-4 p-6">
+          <p>CSVインポート</p>
+          <input
+            type="file"
+            accept=".csv"
+            ref={fileInputRef}
+            onChange={(e) => {
+              if (e.target.files && e.target.files[0]) {
+                setSelectedFile(e.target.files[0]);
+              }
+            }}
+            className="text-sm text-gray-600
                     file:mr-4 file:py-2 file:px-4
                     file:rounded-full file:border-0
                     file:text-sm file:font-semibold
                     file:bg-gray-100 file:text-gray-700
                     hover:file:bg-gray-200"
-        />
+          />
 
-        <button
-          className="mx-auto bg-gray-100 text-gray-800 px-6 py-2 rounded-full hover:bg-gray-200 transition shadow-sm"
-          onClick={handleExcelImport}
-        >
-          Import
-        </button>
+          <button
+            className="mx-auto bg-gray-100 text-gray-800 px-6 py-2 rounded-full hover:bg-gray-200 transition shadow-sm"
+            onClick={handleExcelImport}
+          >
+            Import
+          </button>
+        </section>
       </main>
     </div>
   );
