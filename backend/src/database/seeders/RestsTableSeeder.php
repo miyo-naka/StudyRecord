@@ -21,7 +21,7 @@ class RestsTableSeeder extends Seeder
             'study_session_id' => 1,
             'rest_start_time' => '2025-04-1 13:00:00',
             'rest_finish_time' => '2025-04-1 14:00:00',
-        ],[
+        ], [
             'study_session_id' => 2,
             'rest_start_time' => Carbon::now(),
             'rest_finish_time' => Carbon::now(),

@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         $userId = Auth::id();
 
         $updateData = [
@@ -17,11 +18,12 @@ class UserController extends Controller
             'email' => $request->email,
         ];
 
-        if(!empty($request->password)){
+        if (! empty($request->password)) {
             $updateData['password'] = Hash::make($request->password);
         }
 
         User::where('id', $userId)->update($updateData);
+
         return response()->json([
             'message' => 'Updated successfully',
         ], 200);
