@@ -3,12 +3,15 @@
 import Header from "@/components/Header";
 import fetchUser from "@/services/auth/FetchUser";
 import updateUser from "@/services/user/updateUser";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import importStudySession from "@/services/studySession/importStudySession";
 
 export default function Mypage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   //ユーザー情報を取得
   useEffect(() => {
@@ -32,6 +35,24 @@ export default function Mypage() {
       setPassword("");
     } catch (error) {
       alert("更新に失敗しました");
+    }
+  };
+
+  //Excelインポート
+  const handleExcelImport = async () => {
+    if (!selectedFile) {
+      alert("ファイルを選択してください");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    try {
+      const data = await importStudySession(formData);
+      console.log("インポート成功", data);
+    } catch (error) {
+      console.error("インポート失敗", error);
     }
   };
 
@@ -96,6 +117,31 @@ export default function Mypage() {
             </button>
           </div>
         </section>
+
+        {/* Excelからのインポート */}
+        <input
+          type="file"
+          accept=".csv"
+          ref={fileInputRef}
+          onChange={(e) => {
+            if (e.target.files && e.target.files[0]) {
+              setSelectedFile(e.target.files[0]);
+            }
+          }}
+          className="text-sm text-gray-600
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-gray-100 file:text-gray-700
+                    hover:file:bg-gray-200"
+        />
+
+        <button
+          className="mx-auto bg-gray-100 text-gray-800 px-6 py-2 rounded-full hover:bg-gray-200 transition shadow-sm"
+          onClick={handleExcelImport}
+        >
+          Import
+        </button>
       </main>
     </div>
   );

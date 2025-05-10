@@ -5,7 +5,6 @@ use App\Http\Controllers\CulculatorController;
 use App\Http\Controllers\RestController;
 use App\Http\Controllers\StudySessionController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -20,11 +19,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->group(function(){
+Route::middleware('auth:sanctum')->group(function () {
     // 学習セッション関連
     Route::post('study-sessions/{id}/finish', [StudySessionController::class, 'finish']);
     Route::get('study-sessions/status', [StudySessionController::class, 'status']);
     Route::apiResource('study-sessions', StudySessionController::class);
+    Route::post('import', [StudySessionController::class, 'import']);
 
     // 休憩関連
     Route::post('rests/start', [RestController::class, 'start']);
@@ -39,10 +39,8 @@ Route::middleware('auth:sanctum')->group(function(){
     //　MyPage更新
     Route::put('user', [UserController::class, 'update']);
 
-    //ユーザー情報取得
+    // ユーザー情報取得
     Route::get('/user', function () {
-        return response()->json(['user' => Auth::user()]);});
+        return response()->json(['user' => Auth::user()]);
+    });
 });
-
-
-

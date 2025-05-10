@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\StudySessionImport;
 use App\Models\StudySession;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudySessionController extends Controller
 {
@@ -49,14 +52,14 @@ class StudySessionController extends Controller
         });
 
         return response()->json([
-                'data' => $processedSessions,
-                'pagination' => [
-                    'total' => $sessions->total(),
-                    'per_page' => $sessions->perPage(),
-                    'current_page' => $sessions->currentPage(),
-                    'last_page' => $sessions->lastPage(),
-                ],
-            ]);
+            'data' => $processedSessions,
+            'pagination' => [
+                'total' => $sessions->total(),
+                'per_page' => $sessions->perPage(),
+                'current_page' => $sessions->currentPage(),
+                'last_page' => $sessions->lastPage(),
+            ],
+        ]);
     }
 
     /**
@@ -173,5 +176,22 @@ class StudySessionController extends Controller
             'status' => 'learning',
             'session_id' => $learningSession->id,
         ]);
+    }
+
+    // Excelインポート処理
+    public function import(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            Log::info('ファイル受信成功');
+        } else {
+            Log::warning('ファイルが見つかりませんでした');
+        }
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv',
+        ]);
+
+        Excel::import(new StudySessionImport, $request->file('file'));
+
+        return response()->json(['message' => 'インポートが完了しました']);
     }
 }
