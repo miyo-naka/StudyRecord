@@ -26,7 +26,13 @@
 ＜マイページ＞<br>
 ユーザー情報の編集が可能<br>
 CSVファイルからインポートが可能<br>
-<img src="https://github.com/user-attachments/assets/cc4d5f5e-7ff4-4b8f-a2c6-55a59acbc7b8" width=60%><br><br>
+
+CSVファイル例：<br>
+category_id,content,start_time,finish_time<br>
+1,React学習,2025-05-01 10:00,2025-05-01 11:30<br>
+2,Laravel復習,2025-05-01 13:00,2025-05-01 14:15<br>
+
+<img src="https://github.com/user-attachments/assets/d3bf87ce-f690-49dd-8409-714379238073" width=60%><br><br>
 
 
 
