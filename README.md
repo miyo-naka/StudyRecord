@@ -25,7 +25,9 @@
 
 ＜マイページ＞<br>
 ユーザー情報の編集が可能<br>
-<img src="https://github.com/user-attachments/assets/bc78d965-9e01-46ad-958f-68cb9b6d7630" width=60%><br><br>
+CSVファイルからインポートが可能<br>
+<img src="https://github.com/user-attachments/assets/cc4d5f5e-7ff4-4b8f-a2c6-55a59acbc7b8" width=60%><br><br>
+
 
 
 ## URL
